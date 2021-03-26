@@ -88,7 +88,8 @@ shifted = 450 #distance of trench to ribbon
 #nEls=(30,30,30)
 # nEls = (256,96,96)
 #nEls = (96,48,48)
-nEls = (256, 128)
+#nEls = (256, 128)
+nEls = (128, 64)
 #nEls = (12, 8,8)
 dim = len(nEls)
 
@@ -451,7 +452,7 @@ Fig.Points(Model.swarm, fn_colour=Model.materialField,
 #Fig.script(camera)
 
 # Render in notebook
-Fig.show()
+#Fig.show()
 
 #Fig.window()
 
@@ -470,8 +471,8 @@ for i in Model.materials:
             i.viscosity = j["viscosity"]
             c0 = j["cohesion"] if j.get('cohesion') else None
             c1 = j["cohesion2"] if j.get('cohesion2') else c0
-            if c0 is not None:
-                i.plasticity = GEO.VonMises(cohesion = c0, cohesionAfterSoftening = c1)
+            #if c0 is not None:
+            #    i.plasticity = GEO.VonMises(cohesion = c0, cohesionAfterSoftening = c1)
                                        # TODO epsilon1=0., epsilon2=0.1
 
 if rank == 0: print("Assigning material properties...")
@@ -499,7 +500,7 @@ store = vis.Store("store" + str(shifted))
 figure_one = vis.Figure(store, figsize=(1200,400))
 figure_one.append(Fig.Points(Model.swarm, fn_colour=Model.materialField, fn_mask=materialFilter, opacity=0.5, fn_size=2.0))
 store.step = 0
-figure_one.save()
+#figure_one.save()
 
 
 # In[18]:
@@ -531,7 +532,7 @@ Fig.Points(Model.swarm, fn_colour=Model.materialField, fn_mask=materialFilter,co
 # Fig.save("Figure_1.png")
 
 # Render in notebook
-Fig.show()
+#Fig.show()
 #Fig.window()
 
 
@@ -540,7 +541,7 @@ Fig.show()
 
 Fig = vis.Figure(figsize=(1200,400))
 Fig.Points(Model.swarm, fn_colour=Model.materialField, colours='dem1', fn_size=1.0)
-Fig.show()
+#Fig.show()
 
 
 # ## Passive Tracers
@@ -872,7 +873,7 @@ Fig.Points(Model.swarm, fn_colour=GEO.dimensionalise(Model.densityField,u.kilogr
 
 # Render in notebook
 #Fig.window()
-Fig.show()
+#Fig.show()
 
 
 # In[30]:
@@ -888,7 +889,7 @@ Fig.Points(Model.swarm, fn_colour=GEO.dimensionalise(Model.viscosityField,u.pasc
 
 # Render in notebook
 #Fig.window()
-Fig.show()
+#Fig.show()
 
 
 # In[31]:
@@ -925,8 +926,8 @@ def post_solve_hook():
              f.write(f"{step}\t{time:5e}\t{vrms:5e}\n")
 
         store.step += 1
-        figure_one.save()
-        figure_one.save("store" + str(shifted) + str(store.step))
+        #figure_one.save()
+        #figure_one.save("store" + str(shifted) + str(store.step))
         
     # DEBUG CODE
     #subMesh = Model.mesh.subMesh
@@ -964,9 +965,9 @@ Model.post_solve_functions["Measurements"] = post_solve_hook
 # In[35]:
 
 
-if dim == 2:
-    Model.solver.set_inner_method("lu")
-    GEO.rcParams["initial.nonlinear.tolerance"] = 1e-1
+#if dim == 2:
+#    Model.solver.set_inner_method("lu")
+#    GEO.rcParams["initial.nonlinear.tolerance"] = 1e-1
     #Model.solver.options.scr.ksp_rtol = 1e-6 # small tolerance is good in 2D, not sure if too tight for 3D
 #else:
 #    solver.set_inner_method("superludist")
@@ -1079,7 +1080,7 @@ RESTART = False #first run should be false, then true
 if RESTART == False: 
     #Model.run_for(duration=10*u.megayear,checkpoint_interval=0.25*u.megayear) #here runs first time before onset of ribbon
     print("state")
-    Model.run_for(nstep=20, checkpoint_interval=1)
+    Model.run_for(nstep=3, checkpoint_interval=1)
     
 else:
     # if the restartDir is the same as the current Model.outputDir we don't
@@ -1107,7 +1108,7 @@ else:
 # to visualise after workflow switch
 Fig = vis.Figure(figsize=(1200,400))
 Fig.Points(Model.swarm, fn_colour=Model.materialField, colours='dem1', fn_size=1.0)
-Fig.show()
+#Fig.show()
 
 #print("hey")
 # In[ ]:
@@ -1161,42 +1162,42 @@ Fig.Points(Model.swarm, fn_colour=Model.materialField,
 
 
 # Render in notebook
-Fig.show()
+#Fig.show()
 
 
 # In[ ]:
 
 
-from UWGeodynamics import visualisation as vis
-view = vis.Viewer("store650")
-steps = view.steps
-view.step = steps[80]
-for i in view.figures:
-    view.figure(i)
-    view["title"] = "Timestep ##"
-    view.window()
+# from UWGeodynamics import visualisation as vis
+# view = vis.Viewer("store650")
+# steps = view.steps
+# view.step = steps[80]
+# for i in view.figures:
+#     view.figure(i)
+#     view["title"] = "Timestep ##"
+#     view.window()
+# 
+# 
+# # In[ ]:
+# 
+# 
+# figs = view.figures
+# steps = view.steps
+# view.step = steps[20]
+# for i in view.figures:
+#     view.figure(i)
+#     view["title"] = "Timestep ##"
+#     view.show()
 
 
 # In[ ]:
 
 
-figs = view.figures
-steps = view.steps
-view.step = steps[20]
-for i in view.figures:
-    view.figure(i)
-    view["title"] = "Timestep ##"
-    view.show()
-
-
-# In[ ]:
-
-
-figs = view.figures
-steps = view.steps
-view.step = steps[90]
-for i in view.figures:
-    view.figure(i)
-    view["title"] = "Timestep ##"
-    view.show()
-
+# figs = view.figures
+# steps = view.steps
+# view.step = steps[90]
+# for i in view.figures:
+#     view.figure(i)
+#     view["title"] = "Timestep ##"
+#     view.show()
+# 
